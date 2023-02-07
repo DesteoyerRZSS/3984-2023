@@ -31,7 +31,6 @@ public class Swerve extends SubsystemBase {
     //gyro1.configFactoryDefault();
     //SwerveModulePosition
     zeroGyro();
-    
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getPositions());
     //swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), new SwerveModulePosition[]{}, getPose());
     //swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());

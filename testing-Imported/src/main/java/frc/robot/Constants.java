@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.lib.config.SwerveModuleConstants;
-
+import org.photonvision.*;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -20,8 +20,10 @@ import frc.robot.lib.config.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+    
     public static final class Swerve{
+        // FIXME camera name
+        public static final PhotonCamera camera = new PhotonCamera("FIXME");
         public static final double stickDeadband = 0.1;
         public static final boolean invertGyro = false;
 

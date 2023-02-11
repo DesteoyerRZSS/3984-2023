@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,7 +36,10 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton robotCentric =
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton arm = 
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final Swerve s_Swerve = new Swerve();
+  SendableChooser<generatePath.State> autonChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -45,7 +49,9 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
+        
         () -> true /*TODO robotCentric.get()*/));
+
       
     // Configure the button bindings
     configureButtonBindings();
@@ -59,6 +65,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    
   }
 
   /**
@@ -69,5 +76,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new exampleAuto(s_Swerve);
+    //return new generatePath(s_Swerve, autonChooser.getSelected());
   }
 }

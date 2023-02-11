@@ -28,12 +28,16 @@ public class generatePath extends SequentialCommandGroup {
             PhotonTrackedTarget target = result.getBestTarget();
             Transform3d pose = target.getBestCameraToTarget();
             Translation3d poseTrans = pose.getTranslation();
-            //Trajectory TrajectoryToScore = new TrajectoryGenerator.generateTrajectory(new Pose2d(x:0, y:0, newRotation2d), null, null, null);
+            
+            //Trajectory TrajectoryToScore = new TrajectoryGenerator.generateTrajectory();
         }
         TrajectoryConfig config =
         new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             .setKinematics(Constants.Swerve.swerveKinematics);
+    }
+    public static enum State {
+        Score1, Score2, Score3, path;
     }
 }

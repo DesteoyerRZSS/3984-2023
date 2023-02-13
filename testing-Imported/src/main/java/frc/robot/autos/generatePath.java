@@ -20,7 +20,12 @@ import java.util.List;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-
+// Code that generates path
+/* 1. Initialize 3 positions relative to april tags, left right straight
+ * 2. Look for april tag, get location on the field.
+ * 3. Auto generate path to the position based on user input / auto chooser
+ * 4. Raise arm and move to o position
+ */
 public class generatePath extends SequentialCommandGroup {
     public static void generatePath(Swerve s_Swerve){
         var result = Constants.Swerve.camera.getLatestResult();

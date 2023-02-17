@@ -28,12 +28,16 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Joystick driver = new Joystick(1);
+  private final Joystick aRm = new Joystick(0);
+
   //private final SingleJointedArmSim armM = new Single
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final int SAx = XboxController.Axis.kLeftY.value;
+  private final int JAx = XboxController.Axis.kRightY.value;
 
   private final JoystickButton zeroGyro = 
     new JoystickButton(driver, XboxController.Button.kY.value);
@@ -41,11 +45,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
   private final ArmSubsystem Armm = new ArmSubsystem();
-  private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton Low = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton Medium = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton Retract = new JoystickButton(driver, XboxController.Button.kStart.value);
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -59,11 +59,9 @@ public class RobotContainer {
     Armm.setDefaultCommand(
       new Arm(
         Armm, 
-        () -> Intake.getAsBoolean(), 
-        () -> Low.getAsBoolean(), 
-        () -> Medium.getAsBoolean(), 
-        () -> High.getAsBoolean(),
-        () -> Retract.getAsBoolean()));
+        () -> aRm.getRawAxis(SAx), 
+        () -> aRm.getRawAxis(JAx))
+        );
         
     // Configure the button bindings
     configureButtonBindings();

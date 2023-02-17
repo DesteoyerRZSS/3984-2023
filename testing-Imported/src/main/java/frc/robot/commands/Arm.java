@@ -15,33 +15,19 @@ public class Arm extends CommandBase{
     private BooleanSupplier Medium;
     private BooleanSupplier High;
     private BooleanSupplier Retract;
+    private DoubleSupplier JoyFL;
+    private DoubleSupplier JoyFR;
+
     //Constructor for command
-    public Arm (ArmSubsystem Armm, BooleanSupplier Intake, BooleanSupplier Low, 
-                BooleanSupplier Medium, BooleanSupplier High, BooleanSupplier Retract){
+    public Arm (ArmSubsystem Armm, DoubleSupplier JoyFL, DoubleSupplier JoyFR){
         this.Armm = Armm;
         addRequirements(Armm);
-        this.Intake = Intake;
-        this.Low = Low;
-        this.Medium = Medium;
-        this.High = High;
-        this.Retract = Retract;
+        this.JoyFL = JoyFL;
+        this.JoyFR = JoyFR;
 
     }
     public void execute(){
-        Armm.setPoint(Intake.getAsBoolean(),
-                    Low.getAsBoolean(), 
-                    Medium.getAsBoolean(), 
-                    High.getAsBoolean(), 
-                    Retract.getAsBoolean());
-
-        if (Intake.getAsBoolean() ||
-            Low.getAsBoolean()    || 
-            Medium.getAsBoolean() || 
-            High.getAsBoolean()   || 
-            Retract.getAsBoolean())
-        {
-            Armm.moveToAngle();
-        }
+    Armm.moveToAngle(JoyFL.getAsDouble(), JoyFR.getAsDouble());
     }
 
 }

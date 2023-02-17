@@ -56,7 +56,7 @@ public final class Constants {
         public static final double sarmKG = 0.0;
         public static final double sarmKV = 0.00;
         public static final double sarmKA = 0.0;
-        public static final double sarmKP = 0.001;
+        public static final double sarmKP = 1;
         public static final double sarmKI = 0.000;
         public static final double sarmKD = 0.000;
         public static final double sarmKFF = 0;
@@ -160,7 +160,7 @@ public final class Constants {
             public static final double[] LOWGOAL = new double[]{0, 0}; //TODO
             public static final double[] INTAKE = new double[]{1, -1}; //TODO
             public static final double[] MIDGOAL = new double[]{1, -1}; //TODO
-            public static final double[] HIGHGOAL = new double[]{1, -1}; //TODO
+            public static final double[] HIGHGOAL = new double[]{27, 0}; //TODO
             public static final double[] RETRACTED = new double[]{Shoulder.Length * Math.cos(0) + Joint.Length * Math.cos(0), 
                                                                     Shoulder.Length * Math.sin(0) + Joint.Length*Math.sin(0)};
             

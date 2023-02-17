@@ -49,6 +49,7 @@ public class ArmSubsystem extends SubsystemBase{
         EncoderShoulder.setPosition(0);
         EncoderJoint = jointMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         EncoderJoint.setPosition(0);
+        shoulderMotor.setInverted(true);
     }
     public void moveToAngle(){
         Rotation2d[] angles = new Rotation2d[2];
@@ -69,6 +70,9 @@ public class ArmSubsystem extends SubsystemBase{
             shoulderMotor.setVoltage((goToAngleShoulder.calculate(EncoderShoulder.getPosition() * Math.PI - arm.Shoulder.angleOffset.getRadians()) 
                                     + Shoulderff.calculate(EncoderShoulder.getPosition() * Math.PI - arm.Shoulder.angleOffset.getRadians()
                                     , EncoderShoulder.getVelocity()))*.12);
+            System.out.println(goToAngleShoulder.calculate(EncoderShoulder.getPosition() * Math.PI - arm.Shoulder.angleOffset.getRadians()) 
+            + Shoulderff.calculate(EncoderShoulder.getPosition() * Math.PI - arm.Shoulder.angleOffset.getRadians()
+            , EncoderShoulder.getVelocity())*.12);
             jointMotor.setVoltage((goToAngleJoint.calculate(EncoderJoint.getPosition()*Math.PI - arm.Joint.angleOffset.getRadians())
                                     + Jointff.calculate(EncoderJoint.getPosition() * Math.PI - arm.Joint.angleOffset.getRadians()
                                     , EncoderJoint.getVelocity()))*.12);

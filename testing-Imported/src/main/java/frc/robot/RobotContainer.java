@@ -42,10 +42,7 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final ArmSubsystem Armm = new ArmSubsystem();
   private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton Low = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton Medium = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton Retract = new JoystickButton(driver, XboxController.Button.kStart.value);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -59,12 +56,7 @@ public class RobotContainer {
     Armm.setDefaultCommand(
       new Arm(
         Armm, 
-        () -> Intake.getAsBoolean(), 
-        () -> Low.getAsBoolean(), 
-        () -> Medium.getAsBoolean(), 
-        () -> High.getAsBoolean(),
-        () -> Retract.getAsBoolean()));
-        
+        () -> Intake.getAsBoolean()));
     // Configure the button bindings
     configureButtonBindings();
     

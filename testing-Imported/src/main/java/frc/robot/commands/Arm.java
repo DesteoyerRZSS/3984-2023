@@ -16,8 +16,7 @@ public class Arm extends CommandBase{
     private BooleanSupplier High;
     private BooleanSupplier Retract;
     //Constructor for command
-    public Arm (ArmSubsystem Armm, BooleanSupplier Intake, BooleanSupplier Low, 
-                BooleanSupplier Medium, BooleanSupplier High, BooleanSupplier Retract){
+    public Arm (ArmSubsystem Armm, BooleanSupplier move){
         this.Armm = Armm;
         addRequirements(Armm);
         this.Intake = Intake;

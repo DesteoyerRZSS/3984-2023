@@ -51,20 +51,6 @@ public final class Constants {
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 20;
         public static final int driveContinuousCurrentLimit = 80;
-        /* TODO Arm Motor PID Values */
-        public static final double sarmKS = 0;//1;
-        public static final double sarmKG =0 ;// 1.0;
-        public static final double sarmKV = 0;//1.95;
-        public static final double sarmKA = 0;
-        public static final double sarmKP = 5;
-        public static final double sarmKI = 2;
-        public static final double sarmKD = 1;
-        public static final double sarmKFF = 0;
-
-        public static final double jarmKP = 0.01;
-        public static final double jarmKI = 0.005;
-        public static final double jarmKD = 0.0025;
-        public static final double jarmKFF = 0;
 
         /* TODO tune Angle Motor PID Values */
         public static final double angleKP = 0.01;
@@ -74,8 +60,8 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final double driveKP = 0.05;
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
+        public static final double driveKI = 0;
+        public static final double driveKD = 0;
         public static final double driveKFF = 0.0;
 
         /* Drive Motor Characterization Values */
@@ -151,17 +137,36 @@ public final class Constants {
                 public static final double Length = 34;
                 public static final int rotMotorID = 9; 
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
+                public static final double gearRatio = 0; //TODO
+                /* TODO Arm Motor PID Values */
+                public static final double Ks = 1;
+                public static final double Kg = 1.0;
+                public static final double Kv = 1.95;
+                public static final double Ka = 0.06;
+                public static final double Kp = 5;
+                public static final double Ki = 0;
+                public static final double Kd = 1;
+                public static final double Kff = 0;
             }
             public static final class Joint {
                 public static final double Length = 23.5;
                 public static final int rotMotorID = 10;
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
+                public static final double gearRatio = 0; //TODO
+                public static final double Ks = 1;
+                public static final double Kg = 1.0;
+                public static final double Kv = 1.95;
+                public static final double Ka = 0.06;
+                public static final double Kp = 5;
+                public static final double Ki = 0;
+                public static final double Kd = 1;
+                public static final double Kff = 0;
             }
             public static final double[] LOWGOAL = new double[]{0, 0}; //TODO
             public static final double[] INTAKE = new double[]{1, -1}; //TODO
             public static final double[] MIDGOAL = new double[]{1, -1}; //TODO
             public static final double[] HIGHGOAL = new double[]{27, 0}; //TODO
-            public static final double[] RETRACTED = new double[]{0, 0};
+            public static final double[] RETRACTED = new double[]{0, 0}; //TODO
             
         }
 

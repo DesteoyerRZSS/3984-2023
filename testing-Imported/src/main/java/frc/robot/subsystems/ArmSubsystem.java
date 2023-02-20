@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.Constants.Swerve.arm;
+import frc.robot.Constants.Swerve.arm.Shoulder;
 
 
 public class ArmSubsystem extends SubsystemBase{
@@ -24,7 +25,8 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax jointMotor;
     public RelativeEncoder EncoderShoulder;
     public RelativeEncoder EncoderJoint;
-
+    public double ShoulderValue = 0;
+    public double JointValue = 0;
     // Initialize the goal point for the arm.
     private double[] goal = new double[2];
     private double currAngle = 0;
@@ -41,6 +43,8 @@ public class ArmSubsystem extends SubsystemBase{
                         Constants.Swerve.sarmKG, 
                         Constants.Swerve.sarmKV, 
                         Constants.Swerve.sarmKA);
+    public double PIDShoulder = 0;
+    public double PIDJoint = 0;
     public ArmFeedforward Jointff = new ArmFeedforward(0, 0, 0, 0);
     public ArmSubsystem() {
         shoulderMotor = new CANSparkMax(arm.Shoulder.rotMotorID, MotorType.kBrushless);
@@ -48,17 +52,21 @@ public class ArmSubsystem extends SubsystemBase{
         EncoderShoulder = shoulderMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
         EncoderShoulder.setPosition(0);
         EncoderJoint = jointMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+        shoulderMotor.setInverted(false);
         EncoderJoint.setPosition(0);
         EncoderJoint.setPositionConversionFactor(2*Math.PI);
     }
     public void moveToAngle(){
         Rotation2d[] angles = new Rotation2d[2];
         //get angles needed for each joint
-        angles = this.getAngles(goal[0], goal[1]);
+        
         //ignore this
-        if (goal[1] == 0 && goal[2] == 0){
-            angles[0] = Rotation2d.fromDegrees(0);
-            angles[1] = Rotation2d.fromDegrees(0);
+        if (goal[0] == 0 && goal[1] == 0){
+            angles[0] = Rotation2d.fromRadians(0);
+            angles[1] = Rotation2d.fromRadians(0);
+        }
+        else{
+            angles = this.getAngles(goal[0], goal[1]);
         }
         double angle = angles[0].getRadians();
         goToAngleShoulder.setSetpoint(angle);
@@ -71,14 +79,23 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Angle Goal Shoulder", angle);
         
         SmartDashboard.putNumberArray("GoalPoint: ", goal);
-        if (!goToAngleJoint.atSetpoint() && !goToAngleShoulder.atSetpoint()){
-            shoulderMotor.setVoltage((goToAngleShoulder.calculate(EncoderShoulder.getPosition() - arm.Shoulder.angleOffset.getRadians()) 
-                                    + Shoulderff.calculate(EncoderShoulder.getPosition()- arm.Shoulder.angleOffset.getRadians()
-                                    , EncoderShoulder.getVelocity()))*.12);
-            jointMotor.setVoltage((goToAngleJoint.calculate(EncoderJoint.getPosition() - arm.Joint.angleOffset.getRadians())
-                                    + Jointff.calculate(EncoderJoint.getPosition()- arm.Joint.angleOffset.getRadians()
+      /*   if (!goToAngleJoint.atSetpoint()/*  && !goToAngleShoulder.atSetpoint()/){
+             shoulderMotor.setVoltage(-PIDShoulder 
+                                    /*+ Shoulderff.calculate(ShoulderValue- arm.Shoulder.angleOffset.getRadians()
+                                    , EncoderShoulder.getVelocity())*.12);
+            SmartDashboard.putNumber("ShoulderV", PIDShoulder);
+            jointMotor.setVoltage((goToAngleJoint.calculate(JointValue - arm.Joint.angleOffset.getRadians())
+                                    + Jointff.calculate(JointValue- arm.Joint.angleOffset.getRadians()
                                     , EncoderJoint.getVelocity()))*.12);
+        }*/
+        if ((ShoulderValue/(2*Math.PI)) * 360 < 4500){
+            shoulderMotor.set(difference);
+            
         }
+        else{
+            stop();
+        }
+
     }
     /************************************************/
     public Rotation2d[] getAngles(double x, double y){
@@ -109,7 +126,7 @@ public class ArmSubsystem extends SubsystemBase{
         AngleShoulder = ((Math.PI/2)-k);
         
         //convert angle to radians
-        angles[0] = new Rotation2d(AngleShoulder);
+        angles[0] = new Rotation2d(-AngleShoulder);
         angles[1] = new Rotation2d(AngleJoint);
         return angles;
     }
@@ -118,6 +135,7 @@ public class ArmSubsystem extends SubsystemBase{
         jointMotor.stopMotor();;
         shoulderMotor.stopMotor();;
     }
+
 
     public void setPoint(boolean intake, boolean low, boolean medium, boolean high, boolean retract){
         if (intake){
@@ -138,15 +156,29 @@ public class ArmSubsystem extends SubsystemBase{
             
         }
         else if (retract){
-            goal[0] = arm.RETRACTED[0];
-            goal[1] = arm.RETRACTED[1];
+            goal[0] = 0;
+            goal[1] = 0;
         }
 
     }
+    public double difference = 0;
+    public void updateSensor(){
+        JointValue = -EncoderJoint.getPosition();
+        ShoulderValue = EncoderShoulder.getPosition();
+        difference =  4500 - ShoulderValue/(2*Math.PI) * 360;
+    }
+    public void zero(){
+        EncoderJoint.setPosition(0);
+        EncoderJoint.setPosition(0);
+    }
 
     public void periodic(){
-        double joi = EncoderJoint.getPosition() * 360;
-        double sho = EncoderShoulder.getPosition() * 360;
+        
+        updateSensor();
+        SmartDashboard.putNumber("ShoulderV", ((goToAngleShoulder.calculate(ShoulderValue - arm.Shoulder.angleOffset.getRadians()) ))*.12);
+        PIDShoulder = ((goToAngleShoulder.calculate(ShoulderValue - arm.Shoulder.angleOffset.getRadians()) ))*.12;
+        double joi = EncoderJoint.getPosition()/(2*Math.PI) * 360;
+        double sho = EncoderShoulder.getPosition()/(2*Math.PI) * 360;
         SmartDashboard.putNumber("Shoulder", sho);
         SmartDashboard.putNumber("Joint", joi);
         Rotation2d[] angles = this.getAngles(goal[0], goal[1]);
@@ -154,7 +186,7 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("ShoulderGoal ", angle);
         angle = angles[1].getDegrees();
         SmartDashboard.putNumber("JointGoal ", angle);
-
+        SmartDashboard.putNumber("Direction", (difference));
     }
     /*public void getNewPoint(){
         goal[0] = goal[0] + 0.05;

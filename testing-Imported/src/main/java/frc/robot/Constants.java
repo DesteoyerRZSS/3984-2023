@@ -52,12 +52,12 @@ public final class Constants {
         public static final int angleContinuousCurrentLimit = 20;
         public static final int driveContinuousCurrentLimit = 80;
         /* TODO Arm Motor PID Values */
-        public static final double sarmKS = 1;
-        public static final double sarmKG = 1.0;
-        public static final double sarmKV = 1.95;
-        public static final double sarmKA = 0.06;
+        public static final double sarmKS = 0;//1;
+        public static final double sarmKG =0 ;// 1.0;
+        public static final double sarmKV = 0;//1.95;
+        public static final double sarmKA = 0;
         public static final double sarmKP = 5;
-        public static final double sarmKI = 0;
+        public static final double sarmKI = 2;
         public static final double sarmKD = 1;
         public static final double sarmKFF = 0;
 

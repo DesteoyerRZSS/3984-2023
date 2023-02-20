@@ -46,6 +46,8 @@ public class RobotContainer {
   private final JoystickButton Medium = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton Retract = new JoystickButton(driver, XboxController.Button.kStart.value);
+  private final JoystickButton zero = new JoystickButton(driver, XboxController.Button.kY.value);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -79,7 +81,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-
+    zero.onTrue(new InstantCommand(() -> Armm.zero()));
   }
 
   /**

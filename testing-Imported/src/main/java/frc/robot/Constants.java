@@ -151,18 +151,36 @@ public final class Constants {
                 public static final double Length = 34;
                 public static final int rotMotorID = 9; 
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
+                public static final double gearRatio = 0; //TODO
+                /* TODO Arm Motor PID Values */
+                public static final double Ks = 1;
+                public static final double Kg = 1.0;
+                public static final double Kv = 1.95;
+                public static final double Ka = 0.06;
+                public static final double Kp = 5;
+                public static final double Ki = 0;
+                public static final double Kd = 1;
+                public static final double Kff = 0;
             }
             public static final class Joint {
                 public static final double Length = 23.5;
                 public static final int rotMotorID = 10;
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
+                public static final double gearRatio = 0; //TODO
+                public static final double Ks = 1;
+                public static final double Kg = 1.0;
+                public static final double Kv = 1.95;
+                public static final double Ka = 0.06;
+                public static final double Kp = 5;
+                public static final double Ki = 0;
+                public static final double Kd = 1;
+                public static final double Kff = 0;
             }
             public static final double[] LOWGOAL = new double[]{0, 0}; //TODO
             public static final double[] INTAKE = new double[]{1, -1}; //TODO
             public static final double[] MIDGOAL = new double[]{1, -1}; //TODO
             public static final double[] HIGHGOAL = new double[]{27, 0}; //TODO
-            public static final double[] RETRACTED = new double[]{0, 0};
-            
+            public static final double[] RETRACTED = new double[]{0, 0}; //TODO
         }
 
 

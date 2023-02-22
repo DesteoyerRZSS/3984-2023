@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Swerve.arm;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -41,7 +42,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
   private final ArmSubsystem Armm = new ArmSubsystem();
-  private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -53,10 +54,6 @@ public class RobotContainer {
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
         () -> robotCentric.getAsBoolean()));
-    Armm.setDefaultCommand(
-      new Arm(
-        Armm, 
-        () -> Intake.getAsBoolean()));
     // Configure the button bindings
     configureButtonBindings();
     
@@ -71,7 +68,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-
+    High.onTrue(Armm.moveTo(arm.HIGHGOAL));
   }
 
   /**

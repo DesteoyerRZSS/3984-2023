@@ -41,7 +41,7 @@ public class RobotContainer {
   private final JoystickButton robotCentric =
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
-  private final ArmSubsystem Armm = new ArmSubsystem();
+  private final Arm Armm = new Arm();
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
 
 
@@ -68,7 +68,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    High.onTrue(Armm.moveTo(arm.HIGHGOAL));
+    High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
   }
 
   /**

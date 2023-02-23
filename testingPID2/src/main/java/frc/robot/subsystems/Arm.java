@@ -1,5 +1,4 @@
 package frc.robot.subsystems;
-import javax.management.ConstructorParameters;
 import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
@@ -10,29 +9,23 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants;
 import frc.robot.Constants.Swerve.arm;
-import frc.robot.Constants.Swerve.arm.Shoulder;
 
 
-public class ArmSubsystem extends SubsystemBase{
-    private CANSparkMax shoulderMotor; 
-    private CANSparkMax jointMotor;
-    public RelativeEncoder EncoderShoulder;
-    public RelativeEncoder EncoderJoint;
-    public ArmFeedforward ShoulderFF;
-    public ArmFeedforward JointFF;
-    public SparkMaxPIDController ShoulderPID;
-    public SparkMaxPIDController JointPID;
-    
-    public ArmSubsystem() {
+public class Arm extends SubsystemBase{
+
+
+    private CANSparkMax shoulderMotor, jointMotor; 
+    public RelativeEncoder EncoderShoulder, EncoderJoint;
+    public ArmFeedforward ShoulderFF, JointFF;
+    public SparkMaxPIDController ShoulderPID, JointPID;
+
+
+    public Arm() {
         // Initialize feedforwards with the Ks Kg and Kv values.
         ShoulderFF = new ArmFeedforward(
             arm.Shoulder.Ks, 
@@ -89,8 +82,6 @@ public class ArmSubsystem extends SubsystemBase{
         JointPID.setD(arm.Joint.Kd);
         
     }
-    
-
     public Rotation2d[] getAngles(double x, double y){
         double AngleShoulder;
         double AngleJoint;
@@ -106,44 +97,58 @@ public class ArmSubsystem extends SubsystemBase{
         double k = theta2-j;
         AngleShoulder = ((Math.PI/2)-k);
         //convert angle to radians
-        angles[0] = new Rotation2d(AngleShoulder);
-        angles[1] = new Rotation2d(AngleJoint);
+        angles[0] = new Rotation2d(AngleShoulder * 640); // TODO Multiply by the gear ratio.
+        angles[1] = new Rotation2d(AngleJoint * 640);
         return angles;
     }
-    public void moveToAngle(Rotation2d angleShoulder, Rotation2d angleJoint){
-        System.out.println("Trying to run PID loop");
-        ShoulderPID.setReference(angleShoulder.getDegrees(), ControlType.kPosition, 0, ShoulderFF.calculate(angleShoulder.getRadians(), 0));
-        JointPID.setReference(angleJoint.getDegrees(), ControlType.kPosition, 0, JointFF.calculate(angleJoint.getRadians(), 0));
+
+    public Rotation2d[] getPos(){
+        Rotation2d posShoulder = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
+        Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition());
+        Rotation2d[] angles = new Rotation2d[]{posShoulder, posJoint};
+        return angles;
     }
-    public Rotation2d[] getPosition(){
-        Rotation2d[] poss = new Rotation2d[2];
-        poss[0] = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
-        poss[1] = Rotation2d.fromDegrees(EncoderJoint.getPosition());
-        return poss;
+    public Rotation2d[] getErrors(Rotation2d[] goal){
+        Rotation2d[] currPos = new Rotation2d[] {getPos()[0], getPos()[1]};
+        Rotation2d[] error = new Rotation2d[] {
+            Rotation2d.fromDegrees(currPos[0].getDegrees() - goal[0].getDegrees()), 
+            Rotation2d.fromDegrees(currPos[1].getDegrees() - goal[1].getDegrees())
+        };
+        return error;
     }
-    public Rotation2d[] getError(double goalShoulder, double goalJoint){
-        Rotation2d[] poss = new Rotation2d[2];
-        poss[0] = Rotation2d.fromDegrees( goalShoulder - getPosition()[0].getDegrees());
-        poss[1] = Rotation2d.fromDegrees( goalJoint - getPosition()[1].getDegrees());
-        return poss;
+    public void GoTo(Rotation2d ShoulderGoal, Rotation2d JointGoal){
+        ShoulderPID.setReference(
+            ShoulderGoal.getDegrees(), 
+            ControlType.kPosition, 0,
+            ShoulderFF.calculate(ShoulderGoal.getRadians() 
+            /* subtract angle offset from horizontal position later */,
+             0)
+        );
+        JointPID.setReference(
+            JointGoal.getDegrees(), 
+            ControlType.kPosition, 0,
+            JointFF.calculate(JointGoal.getRadians() 
+            /* subtract angle offset from horizontal position later */,
+             0)
+        );
     }
-    public Command moveTo(double[] point){
-        Rotation2d[] angles = getAngles(point[0], point[1]);
-        return run(() -> 
-            moveToAngle(
-                angles[0], 
-                angles[1]
+    
+    public Command moveTo(double x, double y){
+        Rotation2d[] a = new Rotation2d[]{getAngles(x, y)[0], getAngles(x, y)[1]};
+        return run(
+            () -> GoTo(
+                a[0], a[1]
             )
-        ).until(()->
-            (Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[0].getDegrees())  < 2) && 
-            (Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[1].getDegrees())  < 2) 
+        ).until(
+            ()->(
+                Math.abs(getErrors(a)[0].getDegrees()) < 1 
+                && Math.abs(getErrors(a)[1].getDegrees()) < 1
+            )
         );
     }
     public void periodic(){
+        SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees());
 
     }
-    /*public void getNewPoint(){
-        goal[0] = goal[0] + 0.05;
-        goal[1] = goal[0] + 0.05;
-    }*/
+
 }

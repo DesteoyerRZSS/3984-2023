@@ -105,7 +105,6 @@ public class ArmSubsystem extends SubsystemBase{
         double j = Math.atan(y/x);
         double k = theta2-j;
         AngleShoulder = ((Math.PI/2)-k);
-        //convert angle to radians
         angles[0] = new Rotation2d(AngleShoulder);
         angles[1] = new Rotation2d(AngleJoint);
         return angles;
@@ -140,7 +139,8 @@ public class ArmSubsystem extends SubsystemBase{
         );
     }
     public void periodic(){
-
+        SmartDashboard.putNumber("EncoderShoulder", getPosition()[0].getDegrees());
+        
 
     }
     /*public void getNewPoint(){

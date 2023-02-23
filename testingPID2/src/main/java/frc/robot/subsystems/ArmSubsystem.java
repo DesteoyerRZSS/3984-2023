@@ -83,10 +83,10 @@ public class ArmSubsystem extends SubsystemBase{
         ShoulderPID.setI(arm.Shoulder.Ki);
         ShoulderPID.setD(arm.Shoulder.Kd);
 
-        JointPID = jointMotor.getPIDController();
+        /*JointPID = jointMotor.getPIDController();
         JointPID.setP(arm.Joint.Kp);
         JointPID.setI(arm.Joint.Ki);
-        JointPID.setD(arm.Joint.Kd);
+        JointPID.setD(arm.Joint.Kd);*/
         
     }
     
@@ -112,7 +112,7 @@ public class ArmSubsystem extends SubsystemBase{
     public void moveToAngle(Rotation2d angleShoulder, Rotation2d angleJoint){
         System.out.println("Trying to run PID loop");
         ShoulderPID.setReference(angleShoulder.getDegrees(), ControlType.kPosition, 0, ShoulderFF.calculate(angleShoulder.getRadians(), 0));
-        JointPID.setReference(angleJoint.getDegrees(), ControlType.kPosition, 0, JointFF.calculate(angleJoint.getRadians(), 0));
+        //JointPID.setReference(angleJoint.getDegrees(), ControlType.kPosition, 0, JointFF.calculate(angleJoint.getRadians(), 0));
     }
     public Rotation2d[] getPosition(){
         Rotation2d[] poss = new Rotation2d[2];
@@ -134,8 +134,8 @@ public class ArmSubsystem extends SubsystemBase{
                 angles[1]
             )
         ).until(()->
-            (Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[0].getDegrees())  < 2) && 
-            (Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[1].getDegrees())  < 2) 
+            (Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[0].getDegrees())  < 2) //&& 
+            //(Math.abs(getError(angles[0].getDegrees(), angles[1].getDegrees())[1].getDegrees())  < 2) 
         );
     }
     public void periodic(){

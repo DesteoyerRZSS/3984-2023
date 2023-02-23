@@ -97,15 +97,15 @@ public class Arm extends SubsystemBase{
         double k = theta2-j;
         AngleShoulder = ((Math.PI/2)-k);
         //convert angle to radians
-        angles[0] = new Rotation2d(AngleShoulder * 640); // TODO Multiply by the gear ratio.
-        angles[1] = new Rotation2d(AngleJoint * 640);
+        angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio.
+        angles[1] = new Rotation2d(AngleJoint * 6.4/4);
         return angles;
     }
 
     public Rotation2d[] getPos(){
         Rotation2d posShoulder = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
-        Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition());
-        Rotation2d[] angles = new Rotation2d[]{posShoulder, posJoint};
+        //Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition());
+    Rotation2d[] angles = new Rotation2d[]{posShoulder, Rotation2d.fromDegrees(0) /*posJoint*/};
         return angles;
     }
     public Rotation2d[] getErrors(Rotation2d[] goal){
@@ -124,13 +124,13 @@ public class Arm extends SubsystemBase{
             /* subtract angle offset from horizontal position later */,
              0)
         );
-        JointPID.setReference(
+        /*JointPID.setReference(
             JointGoal.getDegrees(), 
             ControlType.kPosition, 0,
             JointFF.calculate(JointGoal.getRadians() 
-            /* subtract angle offset from horizontal position later */,
+            /* subtract angle offset from horizontal position later ,
              0)
-        );
+        );*/
     }
     
     public Command moveTo(double x, double y){
@@ -142,12 +142,12 @@ public class Arm extends SubsystemBase{
         ).until(
             ()->(
                 Math.abs(getErrors(a)[0].getDegrees()) < 1 
-                && Math.abs(getErrors(a)[1].getDegrees()) < 1
+                //&& Math.abs(getErrors(a)[1].getDegrees()) < 1
             )
         );
     }
     public void periodic(){
-        SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees());
+        SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees()*4);
 
     }
 

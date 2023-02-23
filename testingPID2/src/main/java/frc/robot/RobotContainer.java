@@ -42,7 +42,12 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
   private final Arm Armm = new Arm();
+  //private final Claw claw = new Claw();
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+
+
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -54,6 +59,11 @@ public class RobotContainer {
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
         () -> robotCentric.getAsBoolean()));
+      /*new Intake(
+        claw, 
+        () -> Intake.getAsBoolean(),
+        () -> Outtake.getAsBoolean()
+      );*/
     // Configure the button bindings
     configureButtonBindings();
     
@@ -69,6 +79,8 @@ public class RobotContainer {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
+
+    // Claw:
   }
 
   /**

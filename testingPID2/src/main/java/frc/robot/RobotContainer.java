@@ -43,7 +43,7 @@ public class RobotContainer {
   private final JoystickButton robotCentric =
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
-  private final Arm Armm = new Arm();
+  public static final Arm Armm = new Arm();
   //private final Claw claw = new Claw();
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);

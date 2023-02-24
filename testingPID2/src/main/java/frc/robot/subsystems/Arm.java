@@ -99,21 +99,21 @@ public class Arm extends SubsystemBase{
         AngleShoulder = ((Math.PI/2)-k);
         //convert angle to radians
         angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio.
-        angles[1] = new Rotation2d(AngleJoint * 6.4/4);
+        angles[1] = new Rotation2d(AngleJoint/4);
         return angles;
     }
 
     public Rotation2d[] getPos(){
         Rotation2d posShoulder = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
-        //Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition());
-        Rotation2d[] angles = new Rotation2d[]{posShoulder, Rotation2d.fromDegrees(0) /*posJoint*/};
+        Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition()*4);
+        Rotation2d[] angles = new Rotation2d[]{posShoulder, posJoint};
         return angles;
     }
     public Rotation2d[] getErrors(Rotation2d[] goal){
         Rotation2d[] currPos = new Rotation2d[] {getPos()[0], getPos()[1]};
         Rotation2d[] error = new Rotation2d[] {
             Rotation2d.fromDegrees(currPos[0].getDegrees() - goal[0].getDegrees()), 
-            Rotation2d.fromDegrees(currPos[1].getDegrees() - goal[1].getDegrees())
+            Rotation2d.fromDegrees(currPos[1].getDegrees() - 90/*goal[1].getDegrees()*/)
         };
         return error;
     }
@@ -125,13 +125,12 @@ public class Arm extends SubsystemBase{
             /* subtract angle offset from horizontal position later */,
              0)
         );
-        /*JointPID.setReference(
+        JointPID.setReference(
             JointGoal.getDegrees(), 
             ControlType.kPosition, 0,
-            JointFF.calculate(JointGoal.getRadians() 
-            /* subtract angle offset from horizontal position later ,
-             0)
-        );*/
+            JointFF.calculate(JointGoal.getRadians(),
+             0)// subtract angle offset from horizontal position later
+        );
     }
     public void reset(){
         EncoderShoulder.setPosition(0);
@@ -139,7 +138,7 @@ public class Arm extends SubsystemBase{
     }
     
     public Command moveTo(double x, double y){
-        Rotation2d[] a = new Rotation2d[]{getAngles(x, y)[0], getAngles(x, y)[1]};
+        Rotation2d[] a = new Rotation2d[]{getAngles(x, y)[0], Rotation2d.fromDegrees(45)};// getAngles(x, y)[1]};
         return run(
             () -> GoTo(
                 a[0], a[1]
@@ -147,13 +146,13 @@ public class Arm extends SubsystemBase{
         ).until(
             ()->(
                 Math.abs(getErrors(a)[0].getDegrees()) < 1 
-                //&& Math.abs(getErrors(a)[1].getDegrees()) < 1
+                && Math.abs(getErrors(a)[1].getDegrees()) < 1
             )
         );
     }
     public void periodic(){
         SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees()*4);
-
+        SmartDashboard.putNumber("JointPos", getPos()[1].getDegrees());
     }
 
 }

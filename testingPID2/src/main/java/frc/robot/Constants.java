@@ -171,7 +171,7 @@ public final class Constants {
                 public static final double Kg = 1.0;
                 public static final double Kv = 1.95;
                 public static final double Ka = 0.06;
-                public static final double Kp = 5;
+                public static final double Kp = 0.005;
                 public static final double Ki = 0;
                 public static final double Kd = 1;
                 public static final double Kff = 0;

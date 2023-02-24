@@ -10,6 +10,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
@@ -106,7 +108,9 @@ public class Swerve extends SubsystemBase {
         ? Rotation2d.fromDegrees(360 - gyro.getAngle()/*gyro.getYaw()*/)
         : Rotation2d.fromDegrees(gyro.getAngle()/*getYaw()*/);
   }
-
+  public Command moveToAprilTag(){
+    return new InstantCommand();
+  }
   @Override
   public void periodic() {
     swerveOdometry.update(getYaw(), getPositions());

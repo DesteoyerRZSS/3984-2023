@@ -80,7 +80,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    // Reset Arm
+    zeroGyro.onTrue(new InstantCommand(() -> Armm.reset()));
     High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
+
 
     // Claw:
   }

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,9 +21,9 @@ public class Arm extends SubsystemBase{
 
 
     private CANSparkMax shoulderMotor, jointMotor; 
-    public RelativeEncoder EncoderShoulder, EncoderJoint;
-    public ArmFeedforward ShoulderFF, JointFF;
-    public SparkMaxPIDController ShoulderPID, JointPID;
+    private RelativeEncoder EncoderShoulder, EncoderJoint;
+    private ArmFeedforward ShoulderFF, JointFF;
+    private SparkMaxPIDController ShoulderPID, JointPID;
 
 
     public Arm() {
@@ -105,7 +106,7 @@ public class Arm extends SubsystemBase{
     public Rotation2d[] getPos(){
         Rotation2d posShoulder = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
         //Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition());
-    Rotation2d[] angles = new Rotation2d[]{posShoulder, Rotation2d.fromDegrees(0) /*posJoint*/};
+        Rotation2d[] angles = new Rotation2d[]{posShoulder, Rotation2d.fromDegrees(0) /*posJoint*/};
         return angles;
     }
     public Rotation2d[] getErrors(Rotation2d[] goal){
@@ -131,6 +132,10 @@ public class Arm extends SubsystemBase{
             /* subtract angle offset from horizontal position later ,
              0)
         );*/
+    }
+    public void reset(){
+        EncoderShoulder.setPosition(0);
+        EncoderJoint.setPosition(0);
     }
     
     public Command moveTo(double x, double y){

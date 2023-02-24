@@ -182,6 +182,11 @@ public final class Constants {
             public static final double[] HIGHGOAL = new double[]{27, 0}; //TODO
             public static final double[] RETRACTED = new double[]{0, 0}; //TODO
         }
+        public static final class camera{
+            public static final double CameraHeight = 0;
+            public static final double TargetHeight = 0;
+            public static final double CameraPitch = 0;
+        }
 
 
     }

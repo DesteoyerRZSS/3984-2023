@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -48,8 +49,7 @@ public class RobotContainer {
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-
-
+  private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -84,8 +84,9 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> Armm.reset()));
     High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
 
-
+    MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
     // Claw:
+
   }
 
   /**

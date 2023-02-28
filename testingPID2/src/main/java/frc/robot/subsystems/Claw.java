@@ -7,27 +7,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Claw extends SubsystemBase{
     private Spark rightMotor;
     private Spark leftMotor;
-    private boolean yes;
+    private boolean in;
     private boolean neutral;
     public Claw() {
         rightMotor = new Spark(11);
         leftMotor= new Spark(12);
         leftMotor.setInverted(true);
         rightMotor.setInverted(false);
-        yes = false;
+        in = false;
         neutral = true;
     }
 
     public void Intake(){ 
         rightMotor.set(1);
         leftMotor.set(1);
-        yes = true;
+        in = true;
         neutral = false;
     }
     public void Outtake(){ 
         rightMotor.set(-1);
         leftMotor.set(-1);
-        yes = false;
+        in = false;
         neutral = false;
     }
     public void periodic(){
@@ -35,10 +35,10 @@ public class Claw extends SubsystemBase{
             SmartDashboard.putString("Claw State", "Neutral");
         }
         else{
-            if (yes == true){
+            if (in == true){
                 SmartDashboard.putString("Claw State", "In");
             }
-            else if (yes == false){
+            else if (in == false){
                 SmartDashboard.putString("ClawState", "Out");
             }
 

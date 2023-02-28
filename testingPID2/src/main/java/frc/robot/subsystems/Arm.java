@@ -109,6 +109,7 @@ public class Arm extends SubsystemBase{
     public Rotation2d[] getAngles(double x, double y){
         double AngleShoulder;
         double AngleJoint;
+
         Rotation2d[] angles = new Rotation2d[2];
 		double hypotenuse = Math.hypot(x, y);
 		AngleJoint = Math.pow(hypotenuse,  2) - Math.pow(arm.Shoulder.Length, 2) - Math.pow(arm.Joint.Length, 2);
@@ -162,7 +163,10 @@ public class Arm extends SubsystemBase{
     
     public Command moveTo(double x, double y){
         Rotation2d[] a = new Rotation2d[]{getAngles(x, y)[0], Rotation2d.fromDegrees(90)};// getAngles(x, y)[1]};
-        return run(
+        return runOnce(()->{
+            SmartDashboard.putNumber("Shoulder Goal", a[0].getDegrees());
+            SmartDashboard.putNumber("Joint Goal", a[0].getDegrees());
+        }).andThen(run(
             () -> GoTo(
                 a[0], a[1]
             )
@@ -170,7 +174,7 @@ public class Arm extends SubsystemBase{
             ()->(
                 Math.abs(getErrors(a)[0].getDegrees()) < 1 
                 && Math.abs(getErrors(a)[1].getDegrees()) < 1
-            )
+            ))
         );
     }
     public void periodic(){

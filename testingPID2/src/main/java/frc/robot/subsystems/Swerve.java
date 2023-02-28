@@ -191,6 +191,15 @@ public class Swerve extends SubsystemBase {
     });
     
   }
+  public int getClosestTag(){
+    var lastest = cam.getLatestResult();
+    if (lastest.hasTargets()){
+      return lastest.getBestTarget().getFiducialId();
+    }
+    else{
+      return -1;
+    }
+  }
   public Command moveToTag(int id, Translation2d offset){
     return moveToPose(() -> layout.getTagPose(id).get().toPose2d(), offset);
   }
@@ -203,6 +212,8 @@ public class Swerve extends SubsystemBase {
       return null;
     }
   }
+
+
   public Command alignWNearestRight(int id){
     var lastest = cam.getLatestResult();
     if (lastest.hasTargets()){
@@ -233,6 +244,8 @@ public class Swerve extends SubsystemBase {
 
     return new SequentialCommandGroup();
   }
+
+
 
   @Override
   public void periodic() {

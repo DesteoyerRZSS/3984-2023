@@ -180,7 +180,7 @@ public final class Constants {
                 public static final double Kd = 1;
                 public static final double Kff = 0;
             }
-            public static final double[] INTAKE = new double[]{0, 0}; //TODO
+            public static final double[] INTAKE = new double[]{27, 0}; //TODO
             public static final double[] MIDGOAL = new double[]{35.075, -9.25}; //TODO
             public static final double[] HIGHGOAL = new double[]{52.075, 2.75}; //TODO
             public static final double[] RETRACTED = new double[]{0, 0}; //TODO

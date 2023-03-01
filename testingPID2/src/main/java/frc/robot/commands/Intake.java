@@ -9,10 +9,10 @@ public class Intake extends CommandBase{
     private BooleanSupplier Out;
     private Claw claw;
     public Intake(Claw claw, BooleanSupplier In, BooleanSupplier Out){
-        claw = claw;
+        this.claw = claw;
         addRequirements(claw);
-        In = In;
-        Out = Out;
+        this.In = In;
+        this.Out = Out;
     }
     public void execute(){
         boolean in = In.getAsBoolean();
@@ -22,6 +22,9 @@ public class Intake extends CommandBase{
         }
         else if (out){
             claw.Outtake();
+        }
+        else{
+            claw.Stop();
         }
 
     }

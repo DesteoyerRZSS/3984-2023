@@ -1,4 +1,12 @@
 package frc.robot.subsystems;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
@@ -7,34 +15,22 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 //import edu.wpi.first.wpilibj.SPI;
 //import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
-
-import java.io.IOException;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import org.photonvision.*;
-
-import com.revrobotics.SparkMaxPIDController;
 public class Swerve extends SubsystemBase {
   //private final Pigeon2 gyro1;
   ADXRS450_Gyro gyro;
@@ -44,6 +40,7 @@ public class Swerve extends SubsystemBase {
   private Field2d field;
   private AprilTagFieldLayout layout;
   private final SwerveDrivePoseEstimator swerveOdometryVision;
+  private double previousTimeStamp;
   public Swerve() {
     //gyro1 = new Pigeon2(Constants.Swerve.pigeonID);
     gyro = new ADXRS450_Gyro();
@@ -116,11 +113,13 @@ public class Swerve extends SubsystemBase {
    
 
   public Pose2d getPose() {
-    return swerveOdometry.getPoseMeters();
+    return swerveOdometryVision.getEstimatedPosition();
+    //return swerveOdometry.getPoseMeters();
   }
 
   public void resetOdometry(Pose2d pose) {
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
+    swerveOdometryVision.resetPosition(getYaw(), getPositions(), pose);
   }
 
   public SwerveModuleState[] getStates() {
@@ -249,7 +248,25 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    swerveOdometry.update(getYaw(), getPositions());
+    var lastest = cam.getLatestResult();
+    var time = lastest.getTimestampSeconds();
+    if (time != previousTimeStamp && lastest.hasTargets()){
+      previousTimeStamp = time;
+      var target = lastest.getBestTarget();
+      var targetID = target.getFiducialId();
+      Optional<Pose3d> pos = layout == null ? Optional.empty(): layout.getTagPose(targetID);
+      if (pos.isPresent() && targetID >= 0 && target.getPoseAmbiguity() <= 0.2){
+        var targetPos = pos.get();
+        Transform3d camToPos = target.getBestCameraToTarget();
+        Pose3d camPos = targetPos.transformBy(camToPos);
+        Pose3d visionMeasurement = camPos.transformBy(/*TODO*/camToPos);
+
+        swerveOdometryVision.addVisionMeasurement(visionMeasurement.toPose2d(), time);
+      }
+      
+    }
+
+    swerveOdometryVision.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
 
     for (SwerveModule mod : mSwerveMods) {

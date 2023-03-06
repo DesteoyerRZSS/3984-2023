@@ -32,6 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Joystick driver = new Joystick(1);
+  private final Joystick scoreMatrix = new Joystick(3);
   //private final SingleJointedArmSim armM = new Single
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -51,7 +52,17 @@ public class RobotContainer {
   private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
 
+  private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton LowMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kX.value);
+  private final JoystickButton LowLeft = new JoystickButton(scoreMatrix, XboxController.Button.kA.value);
 
+  private final JoystickButton MidRight = new JoystickButton(scoreMatrix, XboxController.Button.kY.value); 
+  private final JoystickButton MidMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kB.value);
+  private final JoystickButton MidLeft = new JoystickButton(scoreMatrix, XboxController.Button.kRightBumper.value);
+
+  private final JoystickButton HighRight = new JoystickButton(scoreMatrix, XboxController.Button.kBack.value);
+  private final JoystickButton HighMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kStart.value);
+  private final JoystickButton HighLeft = new JoystickButton(scoreMatrix, XboxController.Button.kLeftStick.value);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_Swerve.setDefaultCommand(

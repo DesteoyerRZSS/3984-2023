@@ -1,5 +1,4 @@
 package frc.robot.subsystems;
-import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -121,10 +120,11 @@ public class Arm extends SubsystemBase{
         double k = theta2-j;
         AngleShoulder = ((Math.PI/2)-k);
         // Put the angle inside a Rotation2d array. 
-        angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio.
+        angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio. Add 90 to get to other angle
 
-        angles[1] = new Rotation2d(AngleJoint);
+        angles[1] = new Rotation2d(AngleJoint); // do 360 - angle to get the other angle
         return angles;
+
     }
 
     public Rotation2d[] getPos(){

@@ -30,6 +30,10 @@ public class Claw extends SubsystemBase{
         in = false;
         neutral = false;
     }
+    public void Stop(){
+        rightMotor.set(0);
+        leftMotor.set(0);
+    }
     public void periodic(){
         if (neutral){
             SmartDashboard.putString("Claw State", "Neutral");

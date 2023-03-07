@@ -10,8 +10,8 @@ public class Claw extends SubsystemBase{
     private boolean in;
     private boolean neutral;
     public Claw() {
-        rightMotor = new Spark(11);
-        leftMotor= new Spark(12);
+        rightMotor = new Spark(8);
+        leftMotor= new Spark(9);
         leftMotor.setInverted(true);
         rightMotor.setInverted(false);
         in = false;

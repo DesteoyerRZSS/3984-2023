@@ -48,8 +48,8 @@ public class RobotContainer {
   public static final Arm Armm = new Arm();
   //private final Claw claw = new Claw();
   private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  //private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  //private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
 
   private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);

@@ -39,7 +39,6 @@ public class Swerve extends SubsystemBase {
   private PhotonCamera cam;
   private Field2d field;
   private AprilTagFieldLayout layout;
-  private final SwerveDrivePoseEstimator swerveOdometryVision;
   private double previousTimeStamp;
   public Swerve() {
     //gyro1 = new Pigeon2(Constants.Swerve.pigeonID);
@@ -56,11 +55,11 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(3, Constants.Swerve.Mod3.constants)
     };
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getPositions());
-    swerveOdometryVision = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getPositions(), new Pose2d());
+    //swerveOdometryVision = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getPositions(), new Pose2d());
     //swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), new SwerveModulePosition[]{}, getPose());
     //swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());
 
-    cam = new PhotonCamera("Name Camera Here"); //NAME CAMERA
+    cam = new PhotonCamera("Microsoft_LifeCam_HD-3000 (1)"); //NAME CAMERA
     
     try {
       layout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
@@ -113,13 +112,13 @@ public class Swerve extends SubsystemBase {
    
 
   public Pose2d getPose() {
-    return swerveOdometryVision.getEstimatedPosition();
-    //return swerveOdometry.getPoseMeters();
+    //return swerveOdometryVision.getEstimatedPosition();
+    return swerveOdometry.getPoseMeters();
   }
 
   public void resetOdometry(Pose2d pose) {
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
-    swerveOdometryVision.resetPosition(getYaw(), getPositions(), pose);
+    //swerveOdometryVision.resetPosition(getYaw(), getPositions(), pose);
   }
 
   public SwerveModuleState[] getStates() {
@@ -150,7 +149,7 @@ public class Swerve extends SubsystemBase {
         : Rotation2d.fromDegrees(gyro.getAngle()/*getYaw()*/);
   }
   /* X out, Y to the left */
-  public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d Offset){
+  /*public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d Offset){
     PIDController yPID = new PIDController(0, 0, 0);
     PIDController xPID = new PIDController(0, 0, 0);
     PIDController thetaPID = new PIDController(0, 0, 0);
@@ -189,7 +188,8 @@ public class Swerve extends SubsystemBase {
       thetaPID.close();
     });
     
-  }
+  }*/
+  /* 
   public int getClosestTag(){
     var lastest = cam.getLatestResult();
     if (lastest.hasTargets()){
@@ -210,9 +210,9 @@ public class Swerve extends SubsystemBase {
     else{
       return null;
     }
-  }
+  }*/
 
-
+  /* 
   public Command alignWNearestRight(int id){
     var lastest = cam.getLatestResult();
     if (lastest.hasTargets()){
@@ -242,12 +242,13 @@ public class Swerve extends SubsystemBase {
     }
 
     return new SequentialCommandGroup();
-  }
+  }*/
 
 
 
   @Override
   public void periodic() {
+    /* 
     var lastest = cam.getLatestResult();
     var time = lastest.getTimestampSeconds();
     if (time != previousTimeStamp && lastest.hasTargets()){
@@ -259,14 +260,14 @@ public class Swerve extends SubsystemBase {
         var targetPos = pos.get();
         Transform3d camToPos = target.getBestCameraToTarget();
         Pose3d camPos = targetPos.transformBy(camToPos);
-        Pose3d visionMeasurement = camPos.transformBy(/*TODO*/camToPos);
+        Pose3d visionMeasurement = camPos.transformBy(/*TODOcamToPos);
 
-        swerveOdometryVision.addVisionMeasurement(visionMeasurement.toPose2d(), time);
-      }
+     //   swerveOdometryVision.addVisionMeasurement(visionMeasurement.toPose2d(), time);
+     // }
       
-    }
+    //}*/
 
-    swerveOdometryVision.update(getYaw(), getPositions());
+    swerveOdometry.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
 
     for (SwerveModule mod : mSwerveMods) {

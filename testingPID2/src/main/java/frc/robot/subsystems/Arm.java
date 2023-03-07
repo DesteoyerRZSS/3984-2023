@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Swerve.arm;
+import frc.robot.Constants.Swerve.arm.Shoulder;
 
 
 public class Arm extends SubsystemBase{
@@ -120,11 +122,10 @@ public class Arm extends SubsystemBase{
         double k = theta2-j;
         AngleShoulder = ((Math.PI/2)-k);
         // Put the angle inside a Rotation2d array. 
-        angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio. Add 90 to get to other angle
+        angles[0] = new Rotation2d(AngleShoulder * 6.4/4); // TODO Multiply by the gear ratio.
 
-        angles[1] = new Rotation2d(AngleJoint); // do 360 - angle to get the other angle
+        angles[1] = new Rotation2d(AngleJoint * 3);
         return angles;
-
     }
 
     public Rotation2d[] getPos(){
@@ -149,12 +150,17 @@ public class Arm extends SubsystemBase{
             /* subtract angle offset from horizontal position later */,
              0)
         );
-        JointPID.setReference(
+        /*JointPID.setReference(
             JointGoal.getDegrees(), 
             ControlType.kPosition, 0,
             JointFF.calculate(JointGoal.getRadians(),
              0)// subtract angle offset from horizontal position later
-        );
+        );*/
+    }
+    public void ManualControl(double Jointval, double Shoulderval){
+
+        jointMotor.set(Jointval);
+        shoulderMotor.set(Shoulderval);
     }
     public void reset(){
         EncoderShoulder.setPosition(0);

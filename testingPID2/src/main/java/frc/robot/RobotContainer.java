@@ -33,13 +33,17 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Joystick driver = new Joystick(1);
   private final Joystick scoreMatrix = new Joystick(3);
+  private final Joystick armController = new Joystick(0);
   //private final SingleJointedArmSim armM = new Single
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
-
+  private final int shoulderAxis  =XboxController.Axis.kRightY.value;
+  private final int jointAxis = XboxController.Axis.kLeftY.value;
+  private final JoystickButton armUp = 
+  new JoystickButton( armController, XboxController.Button.kY.value);
   private final JoystickButton zeroGyro = 
     new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton robotCentric =
@@ -72,6 +76,11 @@ public class RobotContainer {
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
         () -> robotCentric.getAsBoolean()));
+      new ManualArm(
+        Armm,
+        () -> armController.getRawAxis(jointAxis) ,
+        () -> armController.getRawAxis(shoulderAxis)
+      );
       /*new Intake(
         claw, 
         () -> Intake.getAsBoolean(),
@@ -93,9 +102,9 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Reset Arm
     zeroGyro.onTrue(new InstantCommand(() -> Armm.reset()));
-    High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
+    //High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
 
-    MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
+    //MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
     // Claw:
 
   }

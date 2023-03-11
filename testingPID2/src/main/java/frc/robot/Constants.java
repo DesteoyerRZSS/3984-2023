@@ -118,7 +118,7 @@ public final class Constants {
         public static final int angleMotorID = 7;
         public static final int canCoderID = 2;
        
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(203.55);//23.55
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(203.75);//23.55
         public static final SwerveModuleConstants constants =
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -128,7 +128,7 @@ public final class Constants {
         public static final int driveMotorID = 6;
         public static final int angleMotorID = 5;
         public static final int canCoderID = 1;
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(508.9);//328.9
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(149.15);//508.9);//328.9
         public static final SwerveModuleConstants constants =
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -138,7 +138,7 @@ public final class Constants {
         public static final int driveMotorID = 4;
         public static final int angleMotorID = 3;
         public static final int canCoderID = 3;
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(399.2);//219.2
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(38.4);//219.2
         public static final SwerveModuleConstants constants =
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -148,7 +148,7 @@ public final class Constants {
         public static final int driveMotorID = 2;
         public static final int angleMotorID = 1;
         public static final int canCoderID = 4;
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(330.02734375);//158.02734375
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(337.02734375);//158.02734375
         public static final SwerveModuleConstants constants =
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -157,36 +157,38 @@ public final class Constants {
             public static final class Shoulder {
                 public static final double Length = 34;
                 public static final int rotMotorID = 9; 
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
-                public static final double gearRatio = 0; //TODO
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(8); //TODO
+                public static final double gearRatio = 640.0; //TODO
                 /* TODO Arm Motor PID Values */
                 public static final double Ks = 1;
                 public static final double Kg = 1.0;
                 public static final double Kv = 1.95;
                 public static final double Ka = 0.06;
-                public static final double Kp = 0.005;
+                public static final double Kp = 0.05;
                 public static final double Ki = 0;
-                public static final double Kd = 1;
+                public static final double Kd = 0;
                 public static final double Kff = 0;
             }
             public static final class Joint {
                 public static final double Length = 23.5;
                 public static final int rotMotorID = 10;
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //TODO
-                public static final double gearRatio = 0; //TODO
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(23); //TODO
+                public static final double gearRatio = 300.0; //TODO
                 public static final double Ks = 1;
                 public static final double Kg = 1.0;
                 public static final double Kv = 1.95;
                 public static final double Ka = 0.06;
-                public static final double Kp = 0.005;
+                public static final double Kp = 0.01;
                 public static final double Ki = 0;
-                public static final double Kd = 1;
+                public static final double Kd = 0;
                 public static final double Kff = 0;
             }
-            public static final double[] INTAKE = new double[]{27, 0}; //TODO
-            public static final double[] MIDGOAL = new double[]{35.075, -9.25}; //TODO
-            public static final double[] HIGHGOAL = new double[]{52.075, 2.75}; //TODO
+            public static final double[] INTAKE = new double[]{0, 82.46}; //TODO
+            public static final double[] MIDGOAL = new double[]{49.26, 61.97}; //TODO
+            public static final double[] HIGHGOAL = new double[]{86.94, 132.26}; //TODO
             public static final double[] RETRACTED = new double[]{0, 0}; //TODO
+            public static final double[] SHELF = new double[]{81.65, 154.2}; //TODO
+
         }
         public static final class camera{
             public static final double Height = 0;

@@ -1,4 +1,7 @@
 package frc.robot.subsystems;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
@@ -29,6 +32,7 @@ public class Arm extends SubsystemBase{
 
     public Arm() {
         // Initialize feedforwards with the Ks Kg and Kv values.
+        /* 
         ShoulderFF = new ArmFeedforward(
             arm.Shoulder.Ks, 
             arm.Shoulder.Kg, 
@@ -38,7 +42,7 @@ public class Arm extends SubsystemBase{
             arm.Joint.Ks,
             arm.Joint.Kg, 
             arm.Joint.Kv
-        );
+        );*/
 
 
         // Initialize the Motors
@@ -63,7 +67,7 @@ public class Arm extends SubsystemBase{
         );
         // Set Conversion factor for Encoder -> degrees
         EncoderShoulder.setPositionConversionFactor(
-            360/arm.Shoulder.gearRatio
+            360.0/arm.Shoulder.gearRatio
         );
         // Set Velocity Conversion factor -> degrees/second
         EncoderShoulder.setVelocityConversionFactor(
@@ -130,7 +134,7 @@ public class Arm extends SubsystemBase{
 
     public Rotation2d[] getPos(){
         Rotation2d posShoulder = Rotation2d.fromDegrees(EncoderShoulder.getPosition());
-        Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition()*4); // returns a value 1/4 of actual angle for some reason
+        Rotation2d posJoint = Rotation2d.fromDegrees(EncoderJoint.getPosition()); // returns a value 1/4 of actual angle for some reason
         Rotation2d[] angles = new Rotation2d[]{posShoulder, posJoint};
         return angles;
     }
@@ -145,11 +149,19 @@ public class Arm extends SubsystemBase{
     public void GoTo(Rotation2d ShoulderGoal, Rotation2d JointGoal){
         ShoulderPID.setReference(
             ShoulderGoal.getDegrees(), 
-            ControlType.kPosition, 0,
-            ShoulderFF.calculate(ShoulderGoal.getRadians() 
-            /* subtract angle offset from horizontal position later */,
-             0)
+            ControlType.kPosition, 0
+            /*ShoulderFF.calculate(ShoulderGoal.getRadians() 
+            /* subtract angle offset from horizontal position later *,
+             0)*/
         );
+        JointPID.setReference(
+            JointGoal.getDegrees(), 
+            ControlType.kPosition, 0
+            /*ShoulderFF.calculate(ShoulderGoal.getRadians() 
+            /* subtract angle offset from horizontal position later *,
+             0)*/
+        );
+        //ShoulderPID.setReference(ShoulderGoa, null)
         /*JointPID.setReference(
             JointGoal.getDegrees(), 
             ControlType.kPosition, 0,
@@ -157,21 +169,33 @@ public class Arm extends SubsystemBase{
              0)// subtract angle offset from horizontal position later
         );*/
     }
-    public void ManualControl(double Jointval, double Shoulderval){
+    public void ManualControl(double Jointval, double Shoulderval, boolean reverse){
+        if (Jointval < 0.2){
+            Jointval = 0;
+        }
+        if (reverse){
+            Jointval = Jointval * -1;
+            Shoulderval = Shoulderval * -1;
+        }
+        
+        jointMotor.set(Jointval * 0.5);
+        shoulderMotor.set(Shoulderval * 0.5);
 
-        jointMotor.set(Jointval);
-        shoulderMotor.set(Shoulderval);
     }
+    public Command JoystickControl(DoubleSupplier Joint, DoubleSupplier Shoulder, BooleanSupplier reverse){
+        return run(()->ManualControl(Joint.getAsDouble(), Shoulder.getAsDouble(), reverse.getAsBoolean()));
+    }
+
     public void reset(){
         EncoderShoulder.setPosition(0);
         EncoderJoint.setPosition(0);
     }
     
-    public Command moveTo(double x, double y){
-        Rotation2d[] a = new Rotation2d[]{getAngles(x, y)[0], Rotation2d.fromDegrees(90)};// getAngles(x, y)[1]};
+    public Command moveTo(double Sangle, double Jangle){
+        Rotation2d[] a = new Rotation2d[]{Rotation2d.fromDegrees(Sangle)/*(49.26)/*getAngles(x, y)[0]*/, Rotation2d.fromDegrees(Jangle)};/*(61.97)};// getAngles(x, y)[1]};*/
         return runOnce(()->{
             SmartDashboard.putNumber("Shoulder Goal", a[0].getDegrees());
-            SmartDashboard.putNumber("Joint Goal", a[0].getDegrees());
+            SmartDashboard.putNumber("Joint Goal", a[1].getDegrees());
         }).andThen(run(
             () -> GoTo(
                 a[0], a[1]
@@ -184,7 +208,7 @@ public class Arm extends SubsystemBase{
         );
     }
     public void periodic(){
-        SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees()*4);
+        SmartDashboard.putNumber("ShoulderPos", getPos()[0].getDegrees());
         SmartDashboard.putNumber("JointPos", getPos()[1].getDegrees());
     }
 

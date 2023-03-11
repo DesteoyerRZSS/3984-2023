@@ -1,6 +1,11 @@
 package frc.robot.subsystems;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -18,21 +23,36 @@ public class Claw extends SubsystemBase{
         neutral = true;
     }
 
-    public void Intake(){ 
-        rightMotor.set(1);
-        leftMotor.set(1);
+    public Command Intake(){ 
+  
         in = true;
         neutral = false;
+        return run(()->{      rightMotor.set(1);
+            leftMotor.set(1);});
     }
-    public void Outtake(){ 
-        rightMotor.set(-1);
-        leftMotor.set(-1);
+    public Command Outtake(){ 
+
         in = false;
         neutral = false;
+        return run(()->{      rightMotor.set(-0.5);
+            leftMotor.set(-0.5);});
     }
-    public void Stop(){
-        rightMotor.set(0);
-        leftMotor.set(0);
+    public Command Stop(){
+        return run(()->{      rightMotor.set(0);
+            leftMotor.set(0);});
+    }
+    public Command ManualClaw(BooleanSupplier in, BooleanSupplier out){
+        if (in.getAsBoolean()){
+            //System.out.println("INN!!!");
+            return run(()->{ Intake(); System.out.println("A");});//{rightMotor.set(-1); leftMotor.set(1);});
+        }
+        else if (out.getAsBoolean()){
+            return run(()-> {rightMotor.set(1); leftMotor.set(-1);});
+        }
+        /*else{
+            return run(()->{rightMotor.stopMotor(); leftMotor.stopMotor();});
+        }*/
+        return run(()->{System.out.println("NOTHING!!!!!!!!");});
     }
     public void periodic(){
         if (neutral){

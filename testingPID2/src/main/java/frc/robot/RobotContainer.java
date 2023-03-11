@@ -40,21 +40,29 @@ public class RobotContainer {
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
-  private final int shoulderAxis  =XboxController.Axis.kRightY.value;
-  private final int jointAxis = XboxController.Axis.kLeftY.value;
-  private final JoystickButton armUp = 
-  new JoystickButton( armController, XboxController.Button.kY.value);
+  private final int shoulderAxis  =XboxController.Axis.kLeftTrigger.value;
+  private final int jointAxis = XboxController.Axis.kRightTrigger.value;
   private final JoystickButton zeroGyro = 
     new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton robotCentric =
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
   public static final Arm Armm = new Arm();
-  //private final Claw claw = new Claw();
-  private final JoystickButton High = new JoystickButton(driver, XboxController.Button.kA.value);
-  //private final JoystickButton Outtake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  //private final JoystickButton Intake = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final Claw claw = new Claw();
+  private final JoystickButton High = new JoystickButton(armController, XboxController.Button.kY.value);
+  private final JoystickButton Mid = new JoystickButton(armController, XboxController.Button.kB.value);
+  private final JoystickButton Retracted = new JoystickButton(armController, XboxController.Button.kX.value);
+  // Intake pos
+  private final JoystickButton Down = new JoystickButton(armController, XboxController.Button.kStart.value);
+  // Shelf pickup
+  private final JoystickButton Shelf = new JoystickButton(armController, XboxController.Button.kBack.value);
+
+
+  private final JoystickButton Outtake = new JoystickButton(armController, XboxController.Button.kRightBumper.value);
+  private final JoystickButton Intake = new JoystickButton(armController, XboxController.Button.kLeftBumper.value);
+  //private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton reverse = new JoystickButton(armController, XboxController.Button.kA.value);
+
 
   private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
   private final JoystickButton LowMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kX.value);
@@ -76,11 +84,10 @@ public class RobotContainer {
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
         () -> robotCentric.getAsBoolean()));
-      new ManualArm(
-        Armm,
-        () -> armController.getRawAxis(jointAxis) ,
-        () -> armController.getRawAxis(shoulderAxis)
-      );
+
+    Armm.setDefaultCommand(Armm.JoystickControl(()-> armController.getRawAxis(jointAxis), ()-> armController.getRawAxis(shoulderAxis), () -> reverse.getAsBoolean()));
+    
+    claw.setDefaultCommand(claw.Stop());
       /*new Intake(
         claw, 
         () -> Intake.getAsBoolean(),
@@ -102,8 +109,14 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Reset Arm
     zeroGyro.onTrue(new InstantCommand(() -> Armm.reset()));
-    //High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
+    High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
+    Mid.onTrue(Armm.moveTo(arm.MIDGOAL[0], arm.MIDGOAL[1]));
+    Retracted.onTrue(Armm.moveTo(arm.RETRACTED[0], arm.RETRACTED[1]));
+    Down.onTrue(Armm.moveTo(arm.INTAKE[0], arm.INTAKE[1]));
+    Intake.whileTrue(claw.Intake());
+    Shelf.onTrue(Armm.moveTo(arm.SHELF[0], arm.SHELF[1]));
 
+    Outtake.whileTrue(claw.Outtake());
     //MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
     // Claw:
 

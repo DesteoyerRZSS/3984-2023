@@ -183,18 +183,19 @@ public final class Constants {
                 public static final double Kd = 0;
                 public static final double Kff = 0;
             }
-            public static final double[] INTAKE = new double[]{0, 82.46}; //TODO
-            public static final double[] MIDGOAL = new double[]{49.26, 61.97}; //TODO
-            public static final double[] HIGHGOAL = new double[]{86.94, 132.26}; //TODO
-            public static final double[] RETRACTED = new double[]{0, 0}; //TODO
-            public static final double[] SHELF = new double[]{81.65, 154.2}; //TODO
+            public static final double[] INTAKE = new double[]{0, 82.46 + 5.3}; 
+            public static final double[] MIDGOAL = new double[]{49.26 + 1.6, 61.97+ 5.3}; 
+            public static final double[] HIGHGOAL = new double[]{86.94 + 1.6, 132.26 + 5.3}; 
+            public static final double[] RETRACTED = new double[]{0, 0}; 
+            public static final double[] SHELF = new double[]{81.65 + 1.6, 154.2 + 5.3}; 
 
         }
         public static final class camera{
             public static final double Height = 0;
             //public static final double TargetHeight = 0;
             public static final double CameraPitch = 0;
-            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d());
+            public static final Rotation3d camAngle = new Rotation3d(0, 0, 0.5427974);
+            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0.2286, 0.1524, 0.99695), camAngle);
             public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
         }
 

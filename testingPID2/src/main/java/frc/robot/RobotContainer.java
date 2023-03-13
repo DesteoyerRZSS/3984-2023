@@ -77,7 +77,6 @@ public class RobotContainer {
   private final JoystickButton reverse = 
     new JoystickButton(armController, XboxController.Button.kA.value);
 
-
   private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
   private final JoystickButton LowMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kX.value);
   private final JoystickButton LowLeft = new JoystickButton(scoreMatrix, XboxController.Button.kA.value);

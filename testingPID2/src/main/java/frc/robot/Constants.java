@@ -158,7 +158,7 @@ public final class Constants {
                 public static final double Length = 34;
                 public static final int rotMotorID = 9; 
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(8); //TODO
-                public static final double gearRatio = 640.0; //TODO
+                public static final double gearRatio = 640.0; 
                 /* TODO Arm Motor PID Values */
                 public static final double Ks = 1;
                 public static final double Kg = 1.0;
@@ -173,7 +173,7 @@ public final class Constants {
                 public static final double Length = 23.5;
                 public static final int rotMotorID = 10;
                 public static final Rotation2d angleOffset = Rotation2d.fromDegrees(23); //TODO
-                public static final double gearRatio = 300.0; //TODO
+                public static final double gearRatio = 300.0; 
                 public static final double Ks = 1;
                 public static final double Kg = 1.0;
                 public static final double Kv = 1.95;

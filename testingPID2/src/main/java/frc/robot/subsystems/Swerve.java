@@ -93,7 +93,11 @@ public class Swerve extends SubsystemBase {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
   }
+  public void stop(){
+    setModuleStates(Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds()));
+  }
   // Aims torwards a April Tag
+  /* 
   public void turnToTarget(){
     var lastestTarget = cam.getLatestResult();
     if (lastestTarget.hasTargets()){
@@ -105,10 +109,13 @@ public class Swerve extends SubsystemBase {
     else{
       System.out.println("NO TARGETS FOUND");
     }
+    PIDController thetaController = new PIDController(Constants.AutoConstants.kPThetaController, 0, 0);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
     Rotation2d targetYaw = PhotonUtils.getYawToPose(getPose(), getPose());
     Translation2d toTarget = new Translation2d(0, targetYaw);
+    SwerveModuleState[] states = Constants.Swerve.swerveKinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0,0, thetaController.calculate(previousTimeStamp), getYaw()));
     //Trajectory g = new TrajectoryGenerator(){}
-  }
+  }*/
    
 
   public Pose2d getPose() {
@@ -150,6 +157,7 @@ public class Swerve extends SubsystemBase {
         ? Rotation2d.fromDegrees(360 - gyro.getAngle()/*gyro.getYaw()*)
         : Rotation2d.fromDegrees(gyro.getAngle()/*getYaw()*);*/
   }
+
   /* X out, Y to the left */
   /*public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d Offset){
     PIDController yPID = new PIDController(0, 0, 0);

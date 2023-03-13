@@ -4,22 +4,22 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Swerve.arm;
-import frc.robot.autos.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.autos.exampleAuto;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.aimAtTarget;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Swerve;
 
 
 /**
@@ -46,22 +46,36 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton robotCentric =
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton aim = 
+  new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+
   private final Swerve s_Swerve = new Swerve();
   public static final Arm Armm = new Arm();
   private final Claw claw = new Claw();
-  private final JoystickButton High = new JoystickButton(armController, XboxController.Button.kY.value);
-  private final JoystickButton Mid = new JoystickButton(armController, XboxController.Button.kB.value);
-  private final JoystickButton Retracted = new JoystickButton(armController, XboxController.Button.kX.value);
+  private final PhotonCamera cam = new PhotonCamera("Microsoft_LifeCam_HD-3000 (1)"); //NAME CAMERA
+
+  private final aimAtTarget aimCommand = new aimAtTarget(cam, s_Swerve, s_Swerve::getPose);
+
+  
+  private final JoystickButton High = 
+    new JoystickButton(armController, XboxController.Button.kY.value);
+  private final JoystickButton Mid = 
+    new JoystickButton(armController, XboxController.Button.kB.value);
+  private final JoystickButton Retracted = 
+    new JoystickButton(armController, XboxController.Button.kX.value);
   // Intake pos
-  private final JoystickButton Down = new JoystickButton(armController, XboxController.Button.kStart.value);
+  private final JoystickButton Down = 
+    new JoystickButton(armController, XboxController.Button.kStart.value);
   // Shelf pickup
-  private final JoystickButton Shelf = new JoystickButton(armController, XboxController.Button.kBack.value);
-
-
-  private final JoystickButton Outtake = new JoystickButton(armController, XboxController.Button.kRightBumper.value);
-  private final JoystickButton Intake = new JoystickButton(armController, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton Shelf = 
+    new JoystickButton(armController, XboxController.Button.kBack.value);
+  private final JoystickButton Outtake = 
+    new JoystickButton(armController, XboxController.Button.kRightBumper.value);
+  private final JoystickButton Intake = 
+    new JoystickButton(armController, XboxController.Button.kLeftBumper.value);
   //private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
-  private final JoystickButton reverse = new JoystickButton(armController, XboxController.Button.kA.value);
+  private final JoystickButton reverse = 
+    new JoystickButton(armController, XboxController.Button.kA.value);
 
 
   private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
@@ -105,6 +119,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    aim.whileTrue(aimCommand);
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Reset Arm

@@ -161,13 +161,6 @@ public class Arm extends SubsystemBase{
             /* subtract angle offset from horizontal position later *,
              0)*/
         );
-        //ShoulderPID.setReference(ShoulderGoa, null)
-        /*JointPID.setReference(
-            JointGoal.getDegrees(), 
-            ControlType.kPosition, 0,
-            JointFF.calculate(JointGoal.getRadians(),
-             0)// subtract angle offset from horizontal position later
-        );*/
     }
     public void ManualControl(double Jointval, double Shoulderval, boolean reverse){
         if (Jointval < 0.2){

@@ -4,16 +4,22 @@
 
 package frc.robot;
 
+import org.ejml.dense.row.decomposition.svd.SafeSvd_DDRM;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Swerve.arm;
+import frc.robot.autos.SimpleAuto;
 import frc.robot.autos.exampleAuto;
+import frc.robot.commands.AutoArm;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.aimAtTarget;
 import frc.robot.subsystems.Arm;
@@ -48,15 +54,18 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton aim = 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-
+  private final JoystickButton light = 
+    new JoystickButton(driver, XboxController.Button.kB.value);
   private final Swerve s_Swerve = new Swerve();
   public static final Arm Armm = new Arm();
   private final Claw claw = new Claw();
   private final PhotonCamera cam = new PhotonCamera("Microsoft_LifeCam_HD-3000 (1)"); //NAME CAMERA
-
+  private final PowerDistribution examplePD = new PowerDistribution(1, ModuleType.kRev);
+  
   private final aimAtTarget aimCommand = new aimAtTarget(cam, s_Swerve, s_Swerve::getPose);
 
-  
+
+
   private final JoystickButton High = 
     new JoystickButton(armController, XboxController.Button.kY.value);
   private final JoystickButton Mid = 
@@ -90,6 +99,7 @@ public class RobotContainer {
   private final JoystickButton HighLeft = new JoystickButton(scoreMatrix, XboxController.Button.kLeftStick.value);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     s_Swerve.setDefaultCommand(
       new TeleopSwerve(
         s_Swerve,
@@ -129,7 +139,13 @@ public class RobotContainer {
     Down.onTrue(Armm.moveTo(arm.INTAKE[0], arm.INTAKE[1]));
     Intake.whileTrue(claw.Intake());
     Shelf.onTrue(Armm.moveTo(arm.SHELF[0], arm.SHELF[1]));
-
+    light.onTrue(new InstantCommand(()->{
+      if (examplePD.getSwitchableChannel()){ 
+        examplePD.setSwitchableChannel(false);
+      } else{
+        examplePD.setSwitchableChannel(true);
+      }
+    }));
     Outtake.whileTrue(claw.Outtake());
     //MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
     // Claw:
@@ -142,7 +158,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    
+    //return new SequentialCommandGroup(
+    //  Armm.moveTo(arm.INTAKE[0], arm.INTAKE[1]).withTimeout(4), claw.Outtake().withTimeout(2), Armm.moveTo(arm.RETRACTED[0], arm.RETRACTED[1]));
     // An ExampleCommand will run in autonomous
-    return new exampleAuto(s_Swerve);
+    //return new SimpleAuto(s_Swerve, claw, Armm);
+    return new exampleAuto(s_Swerve, Armm, claw);
   }
 }

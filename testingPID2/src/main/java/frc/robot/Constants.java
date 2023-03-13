@@ -208,9 +208,9 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
+        public static final double kPXController = 0.1;
+        public static final double kPYController = 0.1;
+        public static final double kPThetaController = 3;
         public static final Translation2d GOALRIGHT = new Translation2d(1, -1);
         public static final Translation2d GOALLEFT = new Translation2d(1, 1);
         public static final Translation2d GOALMIDDLE = new Translation2d(1, 0);

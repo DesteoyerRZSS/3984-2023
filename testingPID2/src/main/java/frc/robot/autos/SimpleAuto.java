@@ -9,32 +9,34 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.Swerve.arm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
+import com.pathplanner.lib.*;
+public class SimpleAuto extends SequentialCommandGroup {
+  public SimpleAuto(Swerve s_Swerve, Claw s_Claw, Arm s_Arm) {
+    //PathPlannerTrajectory expat = PathPlanner.loadPath("n", new PathConstraints(Constants.AutoConstants.kMaxSpeedMetersPerSecond, Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared));
 
-public class exampleAuto extends SequentialCommandGroup {
-  public exampleAuto(Swerve s_Swerve, Arm s_Arm, Claw s_Claw) {
     TrajectoryConfig config =
         new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             .setKinematics(Constants.Swerve.swerveKinematics);
-            
-    config.setReversed(true);
+
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory =
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(/*new Translation2d(1, 1), new Translation2d(2, -1)*/),
+            List.of(),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-4, 0, new Rotation2d(0)),
+            new Pose2d(-5, 0, new Rotation2d(1)),
             config);
 
     var thetaController =
@@ -58,10 +60,7 @@ public class exampleAuto extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-        s_Arm.moveTo(Constants.Swerve.arm.INTAKE[0], Constants.Swerve.arm.INTAKE[1]).withTimeout(3), 
-        s_Claw.Outtake().withTimeout(1),
-        s_Claw.Stop() .withTimeout(1),
-        s_Arm.moveTo(Constants.Swerve.arm.RETRACTED[0], Constants.Swerve.arm.RETRACTED[1]).withTimeout(3),
+
         swerveControllerCommand);
   }
 }

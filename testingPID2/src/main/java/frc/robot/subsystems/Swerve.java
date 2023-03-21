@@ -96,6 +96,13 @@ public class Swerve extends SubsystemBase {
   public void stop(){
     setModuleStates(Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds()));
   }
+  public void setAbsolute() {
+    //SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.resetToAbsolute();
+    }
+  }
   // Aims torwards a April Tag
   /* 
   public void turnToTarget(){

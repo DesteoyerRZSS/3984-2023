@@ -138,7 +138,7 @@ public final class Constants {
         public static final int driveMotorID = 4;
         public static final int angleMotorID = 3;
         public static final int canCoderID = 3;
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(38.4);//219.2
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(40.0);//219.2
         public static final SwerveModuleConstants constants =
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -185,7 +185,7 @@ public final class Constants {
             }
             public static final double[] INTAKE = new double[]{0, 82.46 + 5.3}; 
             public static final double[] MIDGOAL = new double[]{49.26 + 1.6, 61.97+ 5.3}; 
-            public static final double[] HIGHGOAL = new double[]{86.94 + 1.6, 132.26 + 5.3}; 
+        public static final double[] HIGHGOAL = new double[]{86.58-3, 130.2/*86.94 + 1.6 + 5, 132.26 + 5.3*/}; 
             public static final double[] RETRACTED = new double[]{0, 0}; 
             public static final double[] SHELF = new double[]{81.65 + 1.6, 154.2 + 5.3}; 
 
@@ -208,8 +208,8 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 0.1;
-        public static final double kPYController = 0.1;
+        public static final double kPXController = 0.1;//0.2;//0.1;
+        public static final double kPYController = 0.1;//0.2;// 0.1;
         public static final double kPThetaController = 3;
         public static final Translation2d GOALRIGHT = new Translation2d(1, -1);
         public static final Translation2d GOALLEFT = new Translation2d(1, 1);

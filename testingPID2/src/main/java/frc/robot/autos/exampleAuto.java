@@ -34,9 +34,17 @@ public class exampleAuto extends SequentialCommandGroup {
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(/*new Translation2d(1, 1), new Translation2d(2, -1)*/),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-4, 0, new Rotation2d(0)),
+            new Pose2d(-6, 0, new Rotation2d(0)),
             config);
-
+            Trajectory exampleTrajectory2 =
+            TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(/*new Translation2d(1, 1), new Translation2d(2, -1)*/),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(-6, 0, new Rotation2d(0)),
+                config);
     var thetaController =
         new ProfiledPIDController(
             Constants.AutoConstants.kPThetaController,
@@ -55,13 +63,25 @@ public class exampleAuto extends SequentialCommandGroup {
             thetaController,
             s_Swerve::setModuleStates,
             s_Swerve);
+        SwerveControllerCommand swerveControllerCommand1 =
+        new SwerveControllerCommand(
+            exampleTrajectory2,
+            s_Swerve::getPose,
+            Constants.Swerve.swerveKinematics,
+            new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+            new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+            thetaController,
+            s_Swerve::setModuleStates,
+            s_Swerve);
 
     addCommands(
         new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-        s_Arm.moveTo(Constants.Swerve.arm.INTAKE[0], Constants.Swerve.arm.INTAKE[1]).withTimeout(3), 
-        s_Claw.Outtake().withTimeout(1),
+        s_Arm.moveTo(Constants.Swerve.arm.MIDGOAL[0], Constants.Swerve.arm.MIDGOAL[1]).withTimeout(3), 
+        s_Claw.Outtake().withTimeout(2),
         s_Claw.Stop() .withTimeout(1),
-        s_Arm.moveTo(Constants.Swerve.arm.RETRACTED[0], Constants.Swerve.arm.RETRACTED[1]).withTimeout(3),
-        swerveControllerCommand);
+        s_Arm.moveTo(Constants.Swerve.arm.RETRACTED[0], Constants.Swerve.arm.RETRACTED[1]).withTimeout(2.5),
+        swerveControllerCommand,
+        new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
+        swerveControllerCommand1);
   }
 }

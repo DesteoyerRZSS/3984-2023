@@ -70,7 +70,7 @@ public class SwerveModule {
     setSpeed(desiredState, isOpenLoop);
   }
 
-  private void resetToAbsolute() {
+  public void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
     integratedAngleEncoder.setPosition(absolutePosition);
   }
@@ -93,6 +93,7 @@ public class SwerveModule {
     angleController.setD(Constants.Swerve.angleKD);
     angleController.setFF(Constants.Swerve.angleKFF);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
+    angleMotor.setSmartCurrentLimit(30);
     angleMotor.burnFlash();
     resetToAbsolute();
   }
@@ -110,6 +111,7 @@ public class SwerveModule {
     driveController.setD(Constants.Swerve.angleKD);
     driveController.setFF(Constants.Swerve.angleKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
+    driveMotor.setSmartCurrentLimit(50);
     driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);
   }

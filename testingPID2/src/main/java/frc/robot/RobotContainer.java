@@ -7,6 +7,8 @@ package frc.robot;
 import org.ejml.dense.row.decomposition.svd.SafeSvd_DDRM;
 import org.photonvision.PhotonCamera;
 
+import com.ctre.phoenixpro.signals.AbsoluteSensorRangeValue;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Swerve.arm;
@@ -39,7 +42,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Joystick driver = new Joystick(1);
   private final Joystick scoreMatrix = new Joystick(3);
-  private final Joystick armController = new Joystick(0);
+  private final Joystick armController = new Joystick(3);
   //private final SingleJointedArmSim armM = new Single
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -56,6 +59,8 @@ public class RobotContainer {
   new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton light = 
     new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton absolute = 
+    new JoystickButton(driver, XboxController.Button.kA.value);
   private final Swerve s_Swerve = new Swerve();
   public static final Arm Armm = new Arm();
   private final Claw claw = new Claw();
@@ -65,7 +70,8 @@ public class RobotContainer {
   private final aimAtTarget aimCommand = new aimAtTarget(cam, s_Swerve, s_Swerve::getPose);
 
 
-
+  // Xbox controller
+  
   private final JoystickButton High = 
     new JoystickButton(armController, XboxController.Button.kY.value);
   private final JoystickButton Mid = 
@@ -85,7 +91,29 @@ public class RobotContainer {
   //private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton reverse = 
     new JoystickButton(armController, XboxController.Button.kA.value);
-
+   
+  // Button board 
+  /* 
+   private final JoystickButton High = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kY.value);
+  private final JoystickButton Mid = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kB.value);
+  private final JoystickButton Retracted = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kX.value);
+  // Intake pos
+  private final JoystickButton Down = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kStart.value);
+  // Shelf pickup
+  private final JoystickButton Shelf = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kBack.value);
+  private final JoystickButton Outtake = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kRightBumper.value);
+  private final JoystickButton Intake = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
+  //private final JoystickButton MoveToAprilTag = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton reverse = 
+    new JoystickButton(scoreMatrix, XboxController.Button.kA.value);
+  */
   private final JoystickButton LowRight = new JoystickButton(scoreMatrix, XboxController.Button.kLeftBumper.value);
   private final JoystickButton LowMiddle = new JoystickButton(scoreMatrix, XboxController.Button.kX.value);
   private final JoystickButton LowLeft = new JoystickButton(scoreMatrix, XboxController.Button.kA.value);
@@ -132,7 +160,6 @@ public class RobotContainer {
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Reset Arm
-    zeroGyro.onTrue(new InstantCommand(() -> Armm.reset()));
     High.onTrue(Armm.moveTo(arm.HIGHGOAL[0], arm.HIGHGOAL[1]));
     Mid.onTrue(Armm.moveTo(arm.MIDGOAL[0], arm.MIDGOAL[1]));
     Retracted.onTrue(Armm.moveTo(arm.RETRACTED[0], arm.RETRACTED[1]));
@@ -147,6 +174,7 @@ public class RobotContainer {
       }
     }));
     Outtake.whileTrue(claw.Outtake());
+    //absolute.onTrue(new RunCommand(()->{s_Swerve.setAbsolute();}).withTimeout(1));
     //MoveToAprilTag.onTrue(s_Swerve.moveToTag(new Translation2d(1, 0)));
     // Claw:
 

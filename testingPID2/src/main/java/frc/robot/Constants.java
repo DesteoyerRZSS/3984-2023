@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -203,6 +204,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -214,7 +216,7 @@ public final class Constants {
         public static final Translation2d GOALRIGHT = new Translation2d(1, -1);
         public static final Translation2d GOALLEFT = new Translation2d(1, 1);
         public static final Translation2d GOALMIDDLE = new Translation2d(1, 0);
-        
+        public static final PathConstraints constraints = new PathConstraints(kMaxAngularSpeedRadiansPerSecond, kMaxAccelerationMetersPerSecondSquared);
         // Constraint for the motion profilied robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Swerve.arm;
+import frc.robot.autos.Auton;
 import frc.robot.autos.SimpleAuto;
 import frc.robot.autos.exampleAuto;
 import frc.robot.commands.AutoArm;
@@ -45,7 +46,6 @@ public class RobotContainer {
   private final Joystick armController = new Joystick(3);
   //private final SingleJointedArmSim armM = new Single
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
@@ -61,6 +61,8 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value);
   private final JoystickButton absolute = 
     new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton halfSpeed = 
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final Swerve s_Swerve = new Swerve();
   public static final Arm Armm = new Arm();
   private final Claw claw = new Claw();
@@ -68,6 +70,7 @@ public class RobotContainer {
   private final PowerDistribution examplePD = new PowerDistribution(1, ModuleType.kRev);
   
   private final aimAtTarget aimCommand = new aimAtTarget(cam, s_Swerve, s_Swerve::getPose);
+  private final Auton autonChooser = new Auton(s_Swerve, Armm, claw);
 
 
   // Xbox controller
@@ -134,7 +137,8 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
-        () -> robotCentric.getAsBoolean()));
+        () -> robotCentric.getAsBoolean(),
+        () -> halfSpeed.getAsBoolean()));
 
     Armm.setDefaultCommand(Armm.JoystickControl(()-> armController.getRawAxis(jointAxis), ()-> armController.getRawAxis(shoulderAxis), () -> reverse.getAsBoolean()));
     
@@ -191,6 +195,7 @@ public class RobotContainer {
     //  Armm.moveTo(arm.INTAKE[0], arm.INTAKE[1]).withTimeout(4), claw.Outtake().withTimeout(2), Armm.moveTo(arm.RETRACTED[0], arm.RETRACTED[1]));
     // An ExampleCommand will run in autonomous
     //return new SimpleAuto(s_Swerve, claw, Armm);
-    return new exampleAuto(s_Swerve, Armm, claw);
+    return autonChooser.getSelected();
+    //return new exampleAuto(s_Swerve, Armm, claw);
   }
 }

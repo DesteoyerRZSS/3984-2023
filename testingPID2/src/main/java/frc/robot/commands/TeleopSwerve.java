@@ -18,13 +18,15 @@ public class TeleopSwerve extends CommandBase {
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(2.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(2.0);
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2.0);
+  private BooleanSupplier halfSpeed;
 
   public TeleopSwerve(
       Swerve s_Swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
-      BooleanSupplier robotCentricSup) {
+      BooleanSupplier robotCentricSup,
+      BooleanSupplier halfSpeed) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
 
@@ -45,11 +47,16 @@ public class TeleopSwerve extends CommandBase {
             MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband));
     double rotationVal =
         rotationLimiter.calculate(
-            MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
+            MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband)) * 0.4;
+    if (halfSpeed.getAsBoolean()){
+      translationVal = translationVal * 0.5;
+      strafeVal = strafeVal *0.5;
+      rotationVal = rotationVal * 0.5;
+    }
     /* Drive */
     s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity * 0.4,
+        rotationVal * Constants.Swerve.maxAngularVelocity,
         !robotCentricSup.getAsBoolean(),
         true);
   }

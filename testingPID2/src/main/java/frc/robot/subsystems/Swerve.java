@@ -31,6 +31,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Swerve.Mod0;
+import frc.robot.Constants.Swerve.Mod1;
+import frc.robot.Constants.Swerve.Mod2;
+import frc.robot.Constants.Swerve.Mod3;
+import frc.robot.autos.Auton;
 public class Swerve extends SubsystemBase {
   //private final Pigeon2 gyro1;
   ADXRS450_Gyro gyro;
@@ -40,6 +45,7 @@ public class Swerve extends SubsystemBase {
   private Field2d field;
   private AprilTagFieldLayout layout;
   private double previousTimeStamp;
+
   public Swerve() {
     //gyro1 = new Pigeon2(Constants.Swerve.pigeonID);
     gyro = new ADXRS450_Gyro();
@@ -84,6 +90,14 @@ public class Swerve extends SubsystemBase {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
   }
+  public void setModuleStates(ChassisSpeeds chassisSpeeds){
+    SwerveModuleState[] desiredStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);//TODO NEED TO WORK ONnnjnijni
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+    }
+  }
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -92,6 +106,14 @@ public class Swerve extends SubsystemBase {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
+  }
+  public void XLock(){
+    SwerveModuleState[] desiredStates = new SwerveModuleState[4];
+    desiredStates[0] = new SwerveModuleState(0, new Rotation2d(Mod0.angleOffset.getDegrees() + 45));
+    desiredStates[1] = new SwerveModuleState(0, new Rotation2d(Mod1.angleOffset.getDegrees() - 45));
+    desiredStates[2] = new SwerveModuleState(0, new Rotation2d(Mod2.angleOffset.getDegrees() - 45));
+    desiredStates[3] = new SwerveModuleState(0, new Rotation2d(Mod3.angleOffset.getDegrees() + 45));
+    setModuleStates(desiredStates);
   }
   public void stop(){
     setModuleStates(Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds()));

@@ -137,7 +137,7 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
-        () -> robotCentric.getAsBoolean(),
+        ()->false,//() -> robotCentric.getAsBoolean(),
         () -> halfSpeed.getAsBoolean()));
 
     Armm.setDefaultCommand(Armm.JoystickControl(()-> armController.getRawAxis(jointAxis), ()-> armController.getRawAxis(shoulderAxis), () -> reverse.getAsBoolean()));
@@ -160,7 +160,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    aim.whileTrue(aimCommand);
+    //aim.whileTrue(aimCommand);
     //zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // Reset Arm

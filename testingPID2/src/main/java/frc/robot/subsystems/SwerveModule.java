@@ -152,6 +152,9 @@ public class SwerveModule {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
   public SwerveModulePosition getPoset() {
-    return new SwerveModulePosition(driveEncoder.getPosition()*Math.PI*4, getAngle());
+    return new SwerveModulePosition(driveEncoder.getPosition()/*Math.PI*0.1016*2*/, getAngle());
+  }
+  public Double getPosets(){
+    return driveEncoder.getPosition();
   }
 }

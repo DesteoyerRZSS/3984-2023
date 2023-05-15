@@ -195,8 +195,8 @@ public final class Constants {
             public static final double Height = 0;
             //public static final double TargetHeight = 0;
             public static final double CameraPitch = 0;
-            public static final Rotation3d camAngle = new Rotation3d(0, 0, 0.5427974);
-            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0.2286, 0.1524, 0.99695), camAngle);
+            public static final Rotation3d camAngle = new Rotation3d(0, 0, 0/*1.571*/);
+            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0, 0, 0.2921), camAngle);
             public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
         }
 
@@ -212,7 +212,7 @@ public final class Constants {
 
         public static final double kPXController = 0.000000000000001;//0.2;//0.1;
         public static final double kPYController = 0.000000000000001;//0.2;// 0.1;
-        public static final double kPThetaController = 3;
+        public static final double kPThetaController = 7.5;
         public static final Translation2d GOALRIGHT = new Translation2d(1, -1);
         public static final Translation2d GOALLEFT = new Translation2d(1, 1);
         public static final Translation2d GOALMIDDLE = new Translation2d(1, 0);

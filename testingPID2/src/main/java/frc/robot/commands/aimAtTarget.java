@@ -30,7 +30,7 @@ public class aimAtTarget extends CommandBase{
         this.s_Swerve= s_Swerve;
         this.poseProvider = poseProvider;
 
-        omegaController.setTolerance(Units.degreesToRadians(3));
+        omegaController.setTolerance(Units.degreesToRadians(1));
         omegaController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(s_Swerve);
@@ -50,7 +50,7 @@ public class aimAtTarget extends CommandBase{
                 robotPose2d.getX(),
                 robotPose2d.getY(),
                 0.0, 
-                new Rotation3d(0.0, 0.0, robotPose2d.getRotation().getRadians()));
+                new Rotation3d(0.0, 0.0, robotPose2d.getRotation().getRadians() ));
         var lastest = photonCamera.getLatestResult();
         if (lastest.hasTargets()){
             var target = lastest.getBestTarget();
@@ -59,8 +59,12 @@ public class aimAtTarget extends CommandBase{
             var camToTarget= target.getBestCameraToTarget();
             var targetPos = camPose.transformBy(camToTarget);
             var goalPose = targetPos.toPose2d();
-
+            System.out.println(robotPose2d.getRotation());
+            System.out.println(goalPose.getRotation());
             omegaController.setSetpoint(goalPose.getRotation().getRadians());
+        }
+        else{
+            lastTarget = null;
         }
         if (lastTarget == null){
             s_Swerve.stop();

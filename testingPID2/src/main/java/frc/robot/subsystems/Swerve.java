@@ -138,6 +138,7 @@ public class Swerve extends SubsystemBase {
 
   public Pose2d getPose() {
     //return swerveOdometryVision.getEstimatedPosition();
+    
     return swerveOdometry.getPoseMeters();
   }
 
@@ -156,7 +157,7 @@ public class Swerve extends SubsystemBase {
 
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
-    for (SwerveModule mod : mSwerveMods){ //FIXME Error line, null pointer exception fix me
+    for (SwerveModule mod : mSwerveMods){ 
       positions[mod.moduleNumber] = mod.getPoset();
     }
     return positions;
@@ -305,6 +306,7 @@ public class Swerve extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-    }
+      SmartDashboard.putNumber("Mod" + mod.moduleNumber + " DrivePos", mod.getPosets());
+        }
   }
 }

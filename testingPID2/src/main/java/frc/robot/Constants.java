@@ -87,9 +87,9 @@ public final class Constants {
         public static final double driveKFF = 0.0;
 
         /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.667;
-        public static final double driveKV = 2.44;
-        public static final double driveKA = 0.27;
+        public static final double driveKS = 0.11563;//0.667;
+        public static final double driveKV = 2.656;//2.44;
+        public static final double driveKA = 0.276;//0.27;
 
         /* Drive Motor Conversion Factors */
         public static final double driveConversionPositionFactor =
@@ -185,18 +185,18 @@ public final class Constants {
                 public static final double Kff = 0;
             }
             public static final double[] INTAKE = new double[]{0, 82.46 + 5.3}; 
-            public static final double[] MIDGOAL = new double[]{49.26 + 1.6, 61.97+ 5.3}; 
-        public static final double[] HIGHGOAL = new double[]{86.58-3, 130.2/*86.94 + 1.6 + 5, 132.26 + 5.3*/}; 
+            public static final double[] MIDGOAL = new double[]{49.26 + 1.6 - 6.4 + 6.8, 61.97+ 5.3}; 
+        public static final double[] HIGHGOAL = new double[]{86.58-3- 6.4 + 6.8, 130.2 /*86.94 + 1.6 + 5, 132.26 + 5.3*/}; 
             public static final double[] RETRACTED = new double[]{0, 0}; 
-            public static final double[] SHELF = new double[]{81.65 + 1.6, 154.2 + 5.3}; 
+            public static final double[] SHELF = new double[]{81.65 + 1.6- 6.4 + 6.8, 154.2 + 5.3}; 
 
         }
         public static final class camera{
             public static final double Height = 0;
             //public static final double TargetHeight = 0;
             public static final double CameraPitch = 0;
-            public static final Rotation3d camAngle = new Rotation3d(0, 0, 0.5427974);
-            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0.2286, 0.1524, 0.99695), camAngle);
+            public static final Rotation3d camAngle = new Rotation3d(0, 0, 0/*1.571*/);
+            public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0, 0, 0.2921), camAngle);
             public static final Transform3d ROBOT_TO_CAMERA = CAMERA_TO_ROBOT.inverse();
         }
 
@@ -210,9 +210,9 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 0.1;//0.2;//0.1;
-        public static final double kPYController = 0.1;//0.2;// 0.1;
-        public static final double kPThetaController = 3;
+        public static final double kPXController = 0.000000000000001;//0.2;//0.1;
+        public static final double kPYController = 0.000000000000001;//0.2;// 0.1;
+        public static final double kPThetaController = 7.5;
         public static final Translation2d GOALRIGHT = new Translation2d(1, -1);
         public static final Translation2d GOALLEFT = new Translation2d(1, 1);
         public static final Translation2d GOALMIDDLE = new Translation2d(1, 0);

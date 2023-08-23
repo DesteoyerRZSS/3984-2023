@@ -59,7 +59,7 @@ public class RobotContainer {
   new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton light = 
     new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton absolute = 
+  private final JoystickButton absolute = g
     new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton halfSpeed = 
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -137,7 +137,7 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
-        () -> robotCentric.getAsBoolean(),
+        ()->false,//() -> robotCentric.getAsBoolean(),
         () -> halfSpeed.getAsBoolean()));
 
     Armm.setDefaultCommand(Armm.JoystickControl(()-> armController.getRawAxis(jointAxis), ()-> armController.getRawAxis(shoulderAxis), () -> reverse.getAsBoolean()));
